@@ -1,21 +1,31 @@
 // *** REQUIRED MODULES
 
 // Read environment specific variables (process.env)
+require('dotenv').config();
 // Assign axios package to var axios
+var axios = require('axios');
 // Assign moment package to var moment
+var moment = require('moment');
 // Assign spotify package to var Spotify
+var Spotify = require('node-spotify-api');
 // Assign exports object (keys.js) to var keysAPI
+var keysAPI = require('./keys.js');
 // Assign fs package to var fs
+var fs = require('fs');
 
 
 // *** DECLARE GLOBAL VARIABLES:
 
 // Assign command line arguments (process.argv[2], [3]) to var queryRequest[0], [1]
   // process.argv[2] arguments: "concert-this", "spotify-this-song", "movie-this" or "do-what-it-says" 
-    // process.argv[3] arguments: artist/band name, song name, movie name or null, respectively
+  // process.argv[3] arguments: artist/band name, song name, movie name or null, respectively
+var queryRequest = process.argv.slice(2);
 
 // Assign new Spotify { id: client id, secret: client secret } to var spotify 
-    
+var spotify = new Spotify ({
+  id: process.env.SPOTIFY_ID,
+  secret: process.env.SPOTIFY_SECRET
+});
 
 // *** DECLARE FUNCTIONS
 // function bandsInTown(queryStr) {}
@@ -23,6 +33,19 @@
     // Request URL "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
   // Render to terminal: venue.name str, venue.city str & venue.region str, moment(datetime str).format("MM/DD/YYYY")
   // Call logData(queryRequest[0], queryRequest[1], response
+function requestEvents(queryStr) {
+  axios.get("https://rest.bandsintown.com/artists/" + queryStr + "/events?app_id=codingbootcamp")
+  .then(function (response) {
+    console.log(queryStr + " Events:")
+    for (var i = 0; i < response.data.length; i++) {
+      console.log(moment(response.data[i].datetime).format("MM/DD/YYYY") + " - " + response.data[i].venue.name + " in " + response.data[i].venue.city + ", " + response.data[i].venue.region + " on ");
+    }
+    // Call logData(queryRequest[0], queryRequest[1], response
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 // function spotify(queryStr) {}
   // Request song info (Spotify API) using spotify.search({}).then(function(){}).catch(function(err){}) promise
@@ -32,6 +55,15 @@
       // Search object { type: 'track', query: 'The Sign'}
   // Render to terminal: track.artists {}, track.name str, track.preview_url str, track.album {}
   // Call logData(queryRequest[0], queryRequest[1], response)
+function requestSong(queryStr) {
+  spotify.search({ type: 'track', query: queryStr })
+  .then(function(response) {
+    console.log(response.tracks);
+  })
+  .catch(function(error) {
+    console.log(error);
+  })
+}
 
 // function omdb(queryStr) {}
   // Request movie info (OMDb API) using axios.get().then(function(){}).catch(function(){}) promise
@@ -49,8 +81,14 @@
 // *** MAIN CONTROLLER
 
 // If queryRequest[0] equals "concert-this" then call bandsInTown(queryRequest[1])
-  
+if (queryRequest[0] === "concert-this") {
+  requestEvents(queryRequest[1]);
+}
+
 // If queryRequest[0] equals "spotify-this-song" then call spotify(queryRequest[1])
+if (queryRequest[0] === "spotify-this-song") {
+  requestSong(queryRequest[1]);
+}
 
 // If queryRequest[0] equals "movie-this" then call omdb(queryRequest[1])
 
