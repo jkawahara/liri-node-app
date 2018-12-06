@@ -1,8 +1,8 @@
-# Getting Started - NightCrawler
+# Getting Started - LIRI Bot
 ### 1. Why / Background
   * This is Berkeley Coding Boot Camp (BCBC) week 6 homework assignment.
     * The BCBC curriculum generally focuses on JavaScript along with HTML/CSS, using the MERN (MongoDB, Express, React, Node) software stack, to teach web development skills across the client and server. 
-  * The LIRI Bot server-side application...
+  * The LIRI Bot terminal application...
     * 
 
 ### 2. What / Objectives / User Stories

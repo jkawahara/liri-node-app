@@ -1,46 +1,62 @@
-// INCLUDE REQUIRED MODULES
+// *** REQUIRED MODULES
 
-// Read and set environment variables with dotenv package
-require("dotenv").config();
-
-// Import keys.js and assign to keysAPI
-var keysAPI = require("./keys.js");
-
-
-
-// DECLARE GLOBAL VARIABLES
-var spotify = new Spotify(keys.spotify);
+// Read environment specific variables (process.env)
+// Assign axios package to var axios
+// Assign moment package to var moment
+// Assign spotify package to var Spotify
+// Assign exports object (keys.js) to var keysAPI
+// Assign fs package to var fs
 
 
-// DECLARE FUNCTIONS
+// *** DECLARE GLOBAL VARIABLES:
 
+// Assign command line arguments (process.argv[2], [3]) to var queryRequest[0], [1]
+  // process.argv[2] arguments: "concert-this", "spotify-this-song", "movie-this" or "do-what-it-says" 
+    // process.argv[3] arguments: artist/band name, song name, movie name or null, respectively
 
-// MAIN CONTROLLER
+// Assign new Spotify { id: client id, secret: client secret } to var spotify 
+    
 
-// 1- node liri.js concert-this <artist/band name here>
-// Search the Bands in Town Artist Events API ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") for an artist and render the following information about each event to the terminal: Name of the venue, Venue location, Date of the Event (use moment to format this as "MM/DD/YYYY")
+// *** DECLARE FUNCTIONS
+// function bandsInTown(queryStr) {}
+  // Request artist events info (Bandsintown API) using axios.get().then(function(){}).catch(function(){}) promise
+    // Request URL "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
+  // Render to terminal: venue.name str, venue.city str & venue.region str, moment(datetime str).format("MM/DD/YYYY")
+  // Call logData(queryRequest[0], queryRequest[1], response
 
+// function spotify(queryStr) {}
+  // Request song info (Spotify API) using spotify.search({}).then(function(){}).catch(function(err){}) promise
+    // If queryRequest[1] does not equal null then
+      // Search object { type: 'track', query: song name}
+    // Else
+      // Search object { type: 'track', query: 'The Sign'}
+  // Render to terminal: track.artists {}, track.name str, track.preview_url str, track.album {}
+  // Call logData(queryRequest[0], queryRequest[1], response)
 
+// function omdb(queryStr) {}
+  // Request movie info (OMDb API) using axios.get().then(function(){}).catch(function(){}) promise
+    // If queryRequest[1] does not equal null then
+      // Request URL "http://www.omdbapi.com/?t=" + movie name + ?apikey=trilogy"
+    // Else
+      // Request URL "http://www.omdbapi.com/?t=" + 'Mr. Nobody.' + ?apikey=trilogy"
+  // Render to terminal: Title str, Released str, imdbRating str, Ratings[1].Value, Country, Language, Plot, Actors
+  // Call logData(queryRequest[0], queryRequest[1], response
 
-// 2- node liri.js spotify-this-song '<song name here>'
-// Show the following information about the song in your terminal/bash window: Artist(s), The song's name, A preview link of the song from Spotify, The album that the song is from
-// If no song is provided then your program will default to "The Sign" by Ace of Base.
-// You will utilize the node-spotify-api package in order to retrieve song information from the Spotify API.
+// function logData(queryType, queryStr, response) {}
+  // Append to log.txt file (FS module) using fs.appendFile({})
 
+  
+// *** MAIN CONTROLLER
 
+// If queryRequest[0] equals "concert-this" then call bandsInTown(queryRequest[1])
+  
+// If queryRequest[0] equals "spotify-this-song" then call spotify(queryRequest[1])
 
-// 3- node liri.js movie-this '<movie name here>'
-// Output the following information to your terminal/bash window: Title of the movie, Year the movie came out, IMDB Rating of the movie, Rotten Tomatoes Rating of the movie, Country where the movie was produced, Language of the movie, Plot of the movie, Actors in the movie
-// If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
-// You'll use the axios package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use trilogy.
+// If queryRequest[0] equals "movie-this" then call omdb(queryRequest[1])
 
-
-// 4- node liri.js do-what-it-says
-// Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-// It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
-// Edit the text in random.txt to test out the feature for movie-this and concert-this.
-
-
-// Bonus- In addition to logging the data to your terminal/bash window, output the data to a .txt file called log.txt.
-// Make sure you append each command you run to the log.txt file. 
-// Do not overwrite your file each time you run a command.
+// If queryRequest[0] equals "do-what-it-says" then
+  // Read random.txt file (FS module) using fs.readFile({})
+    // Assign csv data to var queryRandom []
+  // If queryRandom[0] equals "concert-this" then call bandsintown(queryRandom[1])
+  // If queryRandom[0] equals "spotify-this-song" then call spotify(queryRandom[1])
+  // If queryRandom[0] equals "movie-this" then call omdb(queryRandom[1])
