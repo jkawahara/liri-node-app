@@ -30,26 +30,36 @@ var spotify = new Spotify(keys.spotify);
 // Assign OMDb app_key to var omdb_app_key
 var omdb_app_key = keys.omdb;
 
+
 // *** DECLARE FUNCTIONS
+
 // function bandsInTown(queryStr) {}
-  // Request artist events info (Bandsintown API) using axios.get().then(function(){}).catch(function(){}) promise
-    // Request URL 'https://rest.bandsintown.com/artists/' + artist + '/events?app_id=' + bands_app_id
-  // Render to terminal: venue.name str, venue.city str & venue.region str, moment(datetime str).format('MM/DD/YYYY')
-  // Call logData(queryRequest[0], queryRequest[1], response
 function requestEvents(queryStr) {
   axios.get('https://rest.bandsintown.com/artists/' + queryStr + '/events?app_id=' + bands_app_id)
   .then(function (response) {
-    console.log('\"' + queryStr + '\"' + ' event query:')
+    console.log('\n\"' + queryStr + '\"' + ' event query:');
+
+    // Append to log.txt
+    logData('\n\"' + queryStr + '\"' + ' event query:');
+    
     for (var i = 0; i < response.data.length; i++) {
       console.log(
         moment(
           response.data[i].datetime).format('MM/DD/YYYY') + ' - ' + 
-          response.data[i].venue.name + ' in ' + 
-          response.data[i].venue.city + ' ' + 
-          response.data[i].venue.country
-        );
+        response.data[i].venue.name + ' in ' + 
+        response.data[i].venue.city + ' ' + 
+        response.data[i].venue.country
+      );
+
+      // Append to log.txt
+      logData(
+        moment(
+          response.data[i].datetime).format('MM/DD/YYYY') + ' - ' + 
+        response.data[i].venue.name + ' in ' + 
+        response.data[i].venue.city + ' ' + 
+        response.data[i].venue.country
+      );
     }
-    // Call logData(queryRequest[0], queryRequest[1], response
   })
   .catch(function (error) {
     console.log(error);
@@ -57,31 +67,43 @@ function requestEvents(queryStr) {
 }
 
 // function spotify(queryStr) {}
-  // Request song info (Spotify API) using spotify.search({}).then(function(){}).catch(function(err){}) promise
-    // If queryRequest[1] does not equal null then
-      // Search object { type: 'track', query: song name}
-    // Else
-      // Search object { type: 'track', query: 'The Sign'}
-  // Render to terminal: track.artists {}, track.name str, track.preview_url str, track.album {}
 function requestSong(queryStr) {
   spotify.search({ type: 'track', query: queryStr, limit: 3 })
   .then(function(response) {
-    console.log('\"' + queryStr + '\"' + ' song query:')
+    console.log('\n\"' + queryStr + '\"' + ' song query:');
+    
+    // Append to log.txt
+    logData('\n\"' + queryStr + '\"' + ' song query:')
     for (var i = 0; i < response.tracks.items.length; i++) {
       console.log(
         'Result ' + (i + 1) + ':\n' +
         'Artist(s): '
         );
+
+      // Append to log.txt
+      logData(
+        'Result ' + (i + 1) + ':\n' +
+        'Artist(s): '
+      );
       for (var j = 0; j < response.tracks.items[i].artists.length; j++) {
         console.log('-' + response.tracks.items[i].artists[j].name);
+
+        // Append to log.txt
+        logData('-' + response.tracks.items[i].artists[j].name);
       }
       console.log(
         'Song: ' + response.tracks.items[i].name + '\n' +
         'Preview Link: ' + response.tracks.items[i].album.external_urls.spotify + '\n' +
-        'Album: ' + response.tracks.items[i].album.name + '\n'
+        'Album: ' + response.tracks.items[i].album.name
+      );
+
+      // Append to log.txt
+      logData(
+        'Song: ' + response.tracks.items[i].name + '\n' +
+        'Preview Link: ' + response.tracks.items[i].album.external_urls.spotify + '\n' +
+        'Album: ' + response.tracks.items[i].album.name
       );
     }
-    // Call logData(queryRequest[0], queryRequest[1], response)
   })
   .catch(function(error) {
     console.log(error);
@@ -89,17 +111,10 @@ function requestSong(queryStr) {
 }
 
 // function omdb(queryStr) {}
-  // Request movie info (OMDb API) using axios.get().then(function(){}).catch(function(){}) promise
-    // If queryRequest[1] does not equal null then
-      // Request URL 'http://www.omdbapi.com/?t=' + movie name + ?apikey=' + omdb_app_key
-    // Else
-      // Request URL 'http://www.omdbapi.com/?t=' + 'Mr. Nobody.' + ?apikey='  + omdb_app_key
-  // Render to terminal: Title str, Released str, imdbRating str, Ratings[1].Value, Country, Language, Plot, Actors
-
 function requestMovie(queryStr) {
   axios.get('http://www.omdbapi.com/?t=' + queryStr + '&y=&plot=short&apikey=' + omdb_app_key).then(function(response) {
     console.log(
-      '\"' + queryStr + '\"' + ' movie query:\n' +
+      '\n\"' + queryStr + '\"' + ' movie query:\n' +
       'Title: ' + response.data.Title + '\n' +
       'Year: ' + response.data.Year + '\n' +
       'IMDB Rating: ' + response.data.imdbRating + '\n' +
@@ -109,7 +124,19 @@ function requestMovie(queryStr) {
       'Short Plot: ' + response.data.Plot + '\n' +
       'Actors: ' + response.data.Actors
     );
-    // Call logData(queryRequest[0], queryRequest[1], response
+
+    // Append to log.txt
+    logData(
+      '\n\"' + queryStr + '\"' + ' movie query:\n' +
+      'Title: ' + response.data.Title + '\n' +
+      'Year: ' + response.data.Year + '\n' +
+      'IMDB Rating: ' + response.data.imdbRating + '\n' +
+      'Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value + '\n' +
+      'Countries: ' + response.data.Country + '\n' +
+      'Language: ' + response.data.Language + '\n' +
+      'Short Plot: ' + response.data.Plot + '\n' +
+      'Actors: ' + response.data.Actors
+    );
   })
   .catch(function(error) {
     console.log(error);
@@ -117,9 +144,15 @@ function requestMovie(queryStr) {
 }
 
 // function logData(queryType, queryStr, response) {}
-  // Append to log.txt file (FS module) using fs.appendFile({})
-
+function logData(text) {
+  fs.appendFile('log.txt', text + '\n', function(error) {
+    if (error) {
+      console.log(error);
+    }
+  }) 
+}
   
+
 // *** MAIN CONTROLLER
 
 // If queryRequest[0] equals 'concert-this' then call requestEvents(queryRequest[1])
@@ -146,29 +179,25 @@ if (queryRequest[0] === 'movie-this') {
 }
 
 // If queryRequest[0] equals 'do-what-it-says then
-  // Read random.txt file (FS module) using fs.readFile({})
-    // Assign csv data to var queryRandom []
-  // If queryRandom[0] equals 'concert-this' then call requestEvents(queryRandom[1])
-  // If queryRandom[0] equals 'spotify-this-song' then call requestSong(queryRandom[1])
-  // If queryRandom[0] equals 'movie-this' then call requestMovie(queryRandom[1])
 if (queryRequest[0] === 'do-what-it-says') {
   fs.readFile('random.txt', 'utf8', function(error, data) {
     if (error) {
       console.log(error);
-    }
-    var queryArray = data.trim().split(",");
-    queryArray[1] = queryArray[1].substr(1, queryArray[1].length - 2);
-    
-    switch (queryArray[0]) {
-      case 'concert-this':
-        requestEvents(queryArray[1]);
-        break;
-      case 'spotify-this-song':
-        requestSong(queryArray[1]);
-        break;
-      case 'movie-this':
-        requestMovie(queryArray[1]);
-        break; 
+    } else {
+      var queryArray = data.trim().split(",");
+      queryArray[1] = queryArray[1].substr(1, queryArray[1].length - 2);
+      
+      switch (queryArray[0]) {
+        case 'concert-this':
+          requestEvents(queryArray[1]);
+          break;
+        case 'spotify-this-song':
+          requestSong(queryArray[1]);
+          break;
+        case 'movie-this':
+          requestMovie(queryArray[1]);
+          break; 
+      }
     }
   }) 
 }
