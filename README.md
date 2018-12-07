@@ -28,7 +28,7 @@
   * The scope of the project fit well into [Agile methodology with Scrum and Kanban frameworks](https://en.wikipedia.org/wiki/Agile_software_development). Due to limited scope and non-group assignment, GitHub's built-in tools were not used to support project execution:
     * [Projects](https://github.com/jkawahara/liri-node-app/projects) Kanban board for documenting user stories and overall progress
     * [Issues](https://github.com/jkawahara/liri-node-app/issues) Issue tracking for user stories, features and bug report
-  * Functionality:
+  * Functionality - refer to [video of application user flow](https://drive.google.com/open?id=16iQI6kKTvrBC2asFz3wrkjkqELEfAwJ3):
     * Design Description
       * Search Bandsintown Artist Events for an artist and render event information to the terminal
         * Command: node liri.js concert-this "artist/band name"
