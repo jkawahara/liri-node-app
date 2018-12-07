@@ -97,6 +97,9 @@ function requestSong(queryStr) {
       // Request URL 'http://www.omdbapi.com/?t=' + 'Mr. Nobody.' + ?apikey='  + omdb_app_key
   // Render to terminal: Title str, Released str, imdbRating str, Ratings[1].Value, Country, Language, Plot, Actors
   // Call logData(queryRequest[0], queryRequest[1], response
+function requestMovie(queryStr) {
+
+}
 
 // function logData(queryType, queryStr, response) {}
   // Append to log.txt file (FS module) using fs.appendFile({})
@@ -104,17 +107,24 @@ function requestSong(queryStr) {
   
 // *** MAIN CONTROLLER
 
-// If queryRequest[0] equals 'concert-this' then call bandsInTown(queryRequest[1])
+// If queryRequest[0] equals 'concert-this' then call requestEvents(queryRequest[1])
 if (queryRequest[0] === 'concert-this') {
   requestEvents(queryRequest[1]);
 }
 
-// If queryRequest[0] equals 'spotify-this-song' then call spotify(queryRequest[1])
+// If queryRequest[0] equals 'spotify-this-song' then call requestSong(queryRequest[1])
 if (queryRequest[0] === 'spotify-this-song') {
-  requestSong(queryRequest[1]);
+  if (queryRequest[1] === undefined) {
+    requestSong("The Sign by Ace of Base")
+  } else {
+    requestSong(queryRequest[1]);
+  }
 }
 
-// If queryRequest[0] equals 'movie-this' then call omdb(queryRequest[1])
+// If queryRequest[0] equals 'movie-this' then call requestMovie(queryRequest[1])
+if (queryRequest[0] === 'movie-this') {
+  requestMovie(queryRequest[1]);
+}
 
 // If queryRequest[0] equals 'do-what-it-says then
   // Read random.txt file (FS module) using fs.readFile({})
