@@ -95,25 +95,25 @@ function requestSong(queryStr) {
     // Else
       // Request URL 'http://www.omdbapi.com/?t=' + 'Mr. Nobody.' + ?apikey='  + omdb_app_key
   // Render to terminal: Title str, Released str, imdbRating str, Ratings[1].Value, Country, Language, Plot, Actors
-  // Call logData(queryRequest[0], queryRequest[1], response
+
 function requestMovie(queryStr) {
-  axios.get('http://www.omdbapi.com/?t=' + queryStr + '&y=&plot=short&apikey=' + omdb_app_key)
-    .then(function(response) {
-      console.log(
-        '\"' + queryStr + '\"' + ' movie query:\n' +
-        'Title: ' + response.data.Title + '\n' +
-        'Year: ' + response.data.Year + '\n' +
-        'IMDB Rating: ' + response.data.imdbRating + '\n' +
-        'Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value + '\n' +
-        'Countries: ' + response.data.Country + '\n' +
-        'Language: ' + response.data.Language + '\n' +
-        'Short Plot: ' + response.data.Plot + '\n' +
-        'Actors: ' + response.data.Actors
-      );
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
+  axios.get('http://www.omdbapi.com/?t=' + queryStr + '&y=&plot=short&apikey=' + omdb_app_key).then(function(response) {
+    console.log(
+      '\"' + queryStr + '\"' + ' movie query:\n' +
+      'Title: ' + response.data.Title + '\n' +
+      'Year: ' + response.data.Year + '\n' +
+      'IMDB Rating: ' + response.data.imdbRating + '\n' +
+      'Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value + '\n' +
+      'Countries: ' + response.data.Country + '\n' +
+      'Language: ' + response.data.Language + '\n' +
+      'Short Plot: ' + response.data.Plot + '\n' +
+      'Actors: ' + response.data.Actors
+    );
+    // Call logData(queryRequest[0], queryRequest[1], response
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
 }
 
 // function logData(queryType, queryStr, response) {}
@@ -148,6 +148,27 @@ if (queryRequest[0] === 'movie-this') {
 // If queryRequest[0] equals 'do-what-it-says then
   // Read random.txt file (FS module) using fs.readFile({})
     // Assign csv data to var queryRandom []
-  // If queryRandom[0] equals 'concert-this' then call bandsintown(queryRandom[1])
-  // If queryRandom[0] equals 'spotify-this-song' then call spotify(queryRandom[1])
-  // If queryRandom[0] equals 'movie-this' then call omdb(queryRandom[1])
+  // If queryRandom[0] equals 'concert-this' then call requestEvents(queryRandom[1])
+  // If queryRandom[0] equals 'spotify-this-song' then call requestSong(queryRandom[1])
+  // If queryRandom[0] equals 'movie-this' then call requestMovie(queryRandom[1])
+if (queryRequest[0] === 'do-what-it-says') {
+  fs.readFile('random.txt', 'utf8', function(error, data) {
+    if (error) {
+      console.log(error);
+    }
+    var queryArray = data.trim().split(",");
+    queryArray[1] = queryArray[1].substr(1, queryArray[1].length - 2);
+    
+    switch (queryArray[0]) {
+      case 'concert-this':
+        requestEvents(queryArray[1]);
+        break;
+      case 'spotify-this-song':
+        requestSong(queryArray[1]);
+        break;
+      case 'movie-this':
+        requestMovie(queryArray[1]);
+        break; 
+    }
+  }) 
+}
