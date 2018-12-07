@@ -30,7 +30,6 @@ var spotify = new Spotify(keys.spotify);
 // Assign OMDb app_key to var omdb_app_key
 var omdb_app_key = keys.omdb;
 
-
 // *** DECLARE FUNCTIONS
 // function bandsInTown(queryStr) {}
   // Request artist events info (Bandsintown API) using axios.get().then(function(){}).catch(function(){}) promise
@@ -40,7 +39,7 @@ var omdb_app_key = keys.omdb;
 function requestEvents(queryStr) {
   axios.get('https://rest.bandsintown.com/artists/' + queryStr + '/events?app_id=' + bands_app_id)
   .then(function (response) {
-    console.log(queryStr + ' Events:')
+    console.log('\"' + queryStr + '\"' + ' event query:')
     for (var i = 0; i < response.data.length; i++) {
       console.log(
         moment(
@@ -67,7 +66,7 @@ function requestEvents(queryStr) {
 function requestSong(queryStr) {
   spotify.search({ type: 'track', query: queryStr, limit: 3 })
   .then(function(response) {
-    console.log(queryStr + ' Songs:')
+    console.log('\"' + queryStr + '\"' + ' song query:')
     for (var i = 0; i < response.tracks.items.length; i++) {
       console.log(
         'Result ' + (i + 1) + ':\n' +
@@ -98,7 +97,23 @@ function requestSong(queryStr) {
   // Render to terminal: Title str, Released str, imdbRating str, Ratings[1].Value, Country, Language, Plot, Actors
   // Call logData(queryRequest[0], queryRequest[1], response
 function requestMovie(queryStr) {
-
+  axios.get('http://www.omdbapi.com/?t=' + queryStr + '&y=&plot=short&apikey=' + omdb_app_key)
+    .then(function(response) {
+      console.log(
+        '\"' + queryStr + '\"' + ' movie query:\n' +
+        'Title: ' + response.data.Title + '\n' +
+        'Year: ' + response.data.Year + '\n' +
+        'IMDB Rating: ' + response.data.imdbRating + '\n' +
+        'Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value + '\n' +
+        'Countries: ' + response.data.Country + '\n' +
+        'Language: ' + response.data.Language + '\n' +
+        'Short Plot: ' + response.data.Plot + '\n' +
+        'Actors: ' + response.data.Actors
+      );
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
 }
 
 // function logData(queryType, queryStr, response) {}
@@ -115,7 +130,7 @@ if (queryRequest[0] === 'concert-this') {
 // If queryRequest[0] equals 'spotify-this-song' then call requestSong(queryRequest[1])
 if (queryRequest[0] === 'spotify-this-song') {
   if (queryRequest[1] === undefined) {
-    requestSong("The Sign by Ace of Base")
+    requestSong('The Sign by Ace of Base')
   } else {
     requestSong(queryRequest[1]);
   }
@@ -123,7 +138,11 @@ if (queryRequest[0] === 'spotify-this-song') {
 
 // If queryRequest[0] equals 'movie-this' then call requestMovie(queryRequest[1])
 if (queryRequest[0] === 'movie-this') {
-  requestMovie(queryRequest[1]);
+  if (queryRequest[1] === undefined) {
+    requestMovie('Mr. Nobody')
+  } else {
+    requestMovie(queryRequest[1]);
+  }
 }
 
 // If queryRequest[0] equals 'do-what-it-says then
