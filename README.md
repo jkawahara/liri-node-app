@@ -30,27 +30,36 @@
     * [Issues](https://github.com/jkawahara/liri-node-app/issues) Issue tracking for user stories, features and bug report
   * Functionality - refer to [video of application user flow](https://drive.google.com/open?id=16iQI6kKTvrBC2asFz3wrkjkqELEfAwJ3):
     * Design Description
-      * Search Bandsintown Artist Events for an artist and render event information to the terminal
-        * Command: node liri.js concert-this "artist/band name"
-        * Response: venue name, venue location, event date "MM/DD/YYYY"
-        * Relevant modules: requestEvents()
-      * Search Spotify for song and render song information to terminal
-        * Command: node liri.js spotify-this-song "song name"
-          * If no song name is entered, then search for default "The Sign" by Ace of Base
-        * Response: Artist(s), song name, preview link of Spotify song, album
-        * Relevant modules: requestSong(), main controller
-      * Search OMDb for movie and render movie information to terminal
-        * Command: node liri.js movie-this "movie name"
-          * If no movie name is entered, then search for default "Mr. Nobody"
-        * Response: movie title, year, IMDb rating, Rotten Tomatoes rating, country, language, short plot, actors
-        * Relevant modules: requestMovie(), main controller
-      * Based on text within random.txt, run one of the previous mentioned searches
+      * Run application if command is entered in terminal and call specific search modules based on command line arguments; Argument1 defines search type and argument2 defines string to search for
+        * Command: node liri.js argument1 argument2
+        * Relevant modules: main controller, readCL(), searchType()
+      * General search description
+        * Read in search string as parameter searchType() 
+        * Use default search string if not entered as command line argument
+        * Use specific npm package for data request; axios for artist events (Bandsintown API) or movie info (OMDb API), node-spotify-api for song info (Spotify REST API)
+        * Read data response, formatted in JSON, and assign to (event/song/movie)Log variable, as an array or string depending on positioning of desired properties within data response object
+        * Log to terminal and write to log.txt; if structure of desired property is an array, iterate thru array
+          * Search Bandsintown Artist Events for an artist and render event information to the terminal
+            * Command: node liri.js concert-this "artist/band name"
+            * Response: venue name, venue location, event date "MM/DD/YYYY"
+            * Relevant modules: requestEvents()
+          * Search Spotify for song and render song information to terminal
+            * Command: node liri.js spotify-this-song "song name"
+              * If no song name is entered, then search for default "The Sign" by Ace of Base
+            * Response: Artist(s), song name, preview link of Spotify song, album
+            * Relevant modules: requestSong()
+          * Search OMDb for movie and render movie information to terminal
+            * Command: node liri.js movie-this "movie name"
+              * If no movie name is entered, then search for default "Mr. Nobody"
+            * Response: movie title, year, IMDb rating, Rotten Tomatoes rating, country, language, short plot, actors
+            * Relevant modules: requestMovie()
+      * Read text in random.txt and run one of the search modules. Contents of random.txt includes argument1 and argument2 per the following structure: argument1,"argument2"
         * Command: node liri.js do-what-it-says
           * Reads random.txt as array and executes the appropriate search
-        * Relevant modules: main controller
-      * Log data to log.txt (Bonus) by appending, not overwriting, each command and search response
-        * Relevant modules: logData(), main controller
-    
+        * Relevant modules: readRandomFile()
+      * Log data to log.txt by appending, not overwriting, each command and search response
+        * Relevant modules: writeToFile()
+
   * Prerequisites for Development:
     * MacBook Air (Intel Core i7, 2.2 GHz, 1 Processor, 2 Cores, 8GB)
     * 64 bit operating system 
