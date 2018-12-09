@@ -13,7 +13,7 @@
       * dotenv is a zero-dependency module that loads environment variables from a .env file into process.env
       * moment: date library for parsing, validating, manipulating, and formatting dates
     * Additionally, the following APIs were used:
-      * OMBDb API responds with movie information
+      * OMDb API responds with movie information
       * Bandsintown API responds with a list of an artist’s events
       * Spotify Web API responds with JSON metadata about music artists, albums, and tracks
   * User Stories, by categorization:
